@@ -16,10 +16,6 @@
                       directions))]
     (cons [] (rec [] zipper))))
 
-(defn- paths->sexprs [zipper paths]
-  (for [p paths]
-    (z/sexpr (reduce (fn [n d] (d n)) zipper p))))
-
 (defn- swapping-mutation [from to]
   (fn [node]
     (condp = (z/sexpr node)
