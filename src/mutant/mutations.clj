@@ -41,11 +41,26 @@
                 (z/edit (partial filterv (complement #{arg})))
                 (z/up))))))))
 
+(defn- rm-fn-body [node]
+  (let [sexpr (z/sexpr node)]
+    (if (seq? sexpr)
+      (let [[defn name args & more] sexpr]
+        (if (and (#{'defn 'defn-} defn)
+                 (vector? args))
+          (loop [child (->> (z/down node)
+                           (iterate z/right)
+                           (take-while identity)
+                           last)]
+            (if-not (= (z/sexpr (z/up child)) [defn name args])
+              (recur (z/up (z/remove child)))
+              [(z/up child)])))))))
+
 (def ^:private mutations
   [and-or
    gt-gte
    lt-lte
    rm-args
+   rm-fn-body
    eq-noteq
    empty?-seq
    for->doseq
