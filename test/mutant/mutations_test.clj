@@ -19,5 +19,9 @@
 (deftest t-rm-fn-body
   (is (contains? (mutations '(defn inv [x] (- x)))
                  '(defn inv [x])))
-  (is (contains? (mutations '(defn inv [x] (prn x) (- x)))
-                 '(defn inv [x]))))
+  (is (contains? (mutations '(defn inc-f [] #(inc %)))
+                 '(defn inc-f [])))
+  (are [form] (contains? (mutations '(defn inv [x] (prn x) (- x)))
+                         form)
+       '(defn inv [x] (prn x))
+       '(defn inv [x] (- x))))

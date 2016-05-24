@@ -47,13 +47,12 @@
       (let [[defn name args & more] sexpr]
         (if (and (#{'defn 'defn-} defn)
                  (vector? args))
-          (loop [child (->> (z/down node)
-                           (iterate z/right)
-                           (take-while identity)
-                           last)]
-            (if-not (= (z/sexpr (z/up child)) [defn name args])
-              (recur (z/up (z/remove child)))
-              [(z/up child)])))))))
+          (for [idx (drop 3 (range (count sexpr)))]
+            (-> (iterate z/right (z/down node))
+                (nth idx)
+                z/remove
+                z/up
+                z/up)))))))
 
 (def ^:private mutations
   [and-or
