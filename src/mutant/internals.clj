@@ -65,12 +65,10 @@
   [ns forms dep-graph test-fn]
   (let [cur-ns (symbol (str *ns*))
         deps (dependants dep-graph ns)
-        zipped (zipmap forms (map z/of-string forms))
-        result (atom {:survivors [], :total 0})]
-    (doseq [candidate forms
-            mutant (mutants (zipped candidate)
-                            (paths-in-zipper (zipped candidate)))]
-      (swap! result update-in [:total] inc)
+        zipped (zipmap forms (map z/of-string forms))]
+    (for [candidate forms
+          mutant (mutants (zipped candidate)
+                          (paths-in-zipper (zipped candidate)))]
       (try
         (in-ns ns)
         (doseq [form forms]
@@ -79,15 +77,15 @@
             (eval (read-string form))))
         (doseq [dep deps]
           (require dep :reload))
-        (when (test-fn)
-          (swap! result update :survivors conj {:mutant (z/string mutant)
-                                                :original candidate
-                                                :ns ns}))
+        (if (test-fn)
+          {:survivor {:mutant (z/string mutant)
+                      :original candidate
+                      :ns ns}}
+          {})
         (catch Throwable ex
-          (comment jolly good))
+          {})
         (finally
           (require ns :reload)
           (doseq [dep deps]
             (require dep :reload))
-          (in-ns cur-ns))))
-    @result))
+          (in-ns cur-ns))))))
