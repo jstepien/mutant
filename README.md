@@ -18,10 +18,12 @@ Make sure your test namespaces are loaded let Mutant find some survivors.
 Print the report or save it in a file and highlight it with [colordiff][cd].
 
 ```clojure
+user=> (require 'mutant.core 'mutant.helpers.clojure-test)
+
 user=> (def results
          (mutant.core/run "src" "test" mutant.helpers.clojure-test/test-fn))
 
-user=> (spit "results" (with-out-str (mutant.core/pprint results)))
+user=> (spit "results" (with-out-str (mutant.core/pprint (last results))))
 ```
 
 ![coloured diff](https://stepien.cc/~jan/mutant/pretty.png)
@@ -39,9 +41,9 @@ mutation it reloads relevant namespaces found in `source-directory`
 and `test-directory` and invokes `test-fn`. `test-fn` should throw
 or return a falsey value upon failure.
 
-Returns a map of results consisting following keys:
+Returns a lazy seq of maps of results consisting of following keys:
 
-  - `:total` is the total number of generated mutants, and
+  - `:total` is the total number of generated mutants so far, and
   - `:survivors` is a sequence of mutants which didn't cause `test-fn`
     to report failure. Each mutant is a map with following keys:
     - `:ns` is the mutant's namespace,
