@@ -1,4 +1,4 @@
-(defproject mutant "0.0.0"
+(defproject mutant "0.1.0-SNAPSHOT"
   :description "Mutation testing for Clojure"
   :url "https://github.com/jstepien/mutant"
   :license {:name "Apache License, Version 2.0"
