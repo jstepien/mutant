@@ -14,8 +14,15 @@ the mutation as a survivor.
 
 ## Usage
 
-Make sure your test namespaces are loaded let Mutant find some survivors.
-Print the report or save it in a file and highlight it with [colordiff][cd].
+1. Add `mutant` to the dependencies in your `project.clj`
+
+``` [mutant "0.0.0"] ```
+
+2. Start a repl (e.g. with `lein repl`). Ensure that your current tests pass.
+
+3. Make sure your test namespaces are loaded.
+
+4. Now run Mutant:
 
 ```clojure
 user=> (require 'mutant.core 'mutant.helpers.clojure-test)
@@ -25,6 +32,8 @@ user=> (def results
 
 user=> (spit "results" (with-out-str (mutant.core/pprint (last results))))
 ```
+
+5. Print the report or save it in a file and highlight it with [colordiff][cd].
 
 ![coloured diff](https://stepien.cc/~jan/mutant/pretty.png)
 
