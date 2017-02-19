@@ -16,7 +16,7 @@ the mutation as a survivor.
 
 1. Add `mutant` to the dependencies in your `project.clj`
 
-``` [mutant "0.1.0"] ```
+``` [mutant "0.2.0"] ```
 
 2. Start a repl (e.g. with `lein repl`). Ensure that your current tests pass.
 
