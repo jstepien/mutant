@@ -14,30 +14,12 @@ the mutation as a survivor.
 
 ## Usage
 
-1. Add `mutant` to the dependencies in your `project.clj`
+[![lein-mutate on Clojars](https://img.shields.io/clojars/v/lein-mutate.svg)](https://clojars.org/lein-mutate)
 
-``` [mutant "0.2.0"] ```
+Add the `lein-mutate` to in the `:plugins` vector of either your `:user` profile
+or your project.clj. Make sure your test suite is green. Then run:
 
-2. Start a repl (e.g. with `lein repl`). Ensure that your current tests pass.
-
-3. Make sure your test namespaces are loaded.
-
-4. Now run Mutant:
-
-```clojure
-user=> (require 'mutant.core 'mutant.helpers.clojure-test)
-
-user=> (def results
-         (mutant.core/run "src" "test" mutant.helpers.clojure-test/test-fn))
-
-user=> (spit "results" (with-out-str (mutant.core/pprint (last results))))
-```
-
-5. Print the report or save it in a file and highlight it with [colordiff][cd].
-
-![coloured diff](https://stepien.cc/~jan/mutant/pretty.png)
-
-[cd]: http://www.colordiff.org/
+    $ lein trampoline mutate
 
 ### API
 
