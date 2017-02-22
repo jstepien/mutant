@@ -15,7 +15,7 @@
                           (cons (conj prefix dir)
                                 (rec (conj prefix dir) sub-node))))
                       directions))]
-    (cons [] (rec [] zipper))))
+    (cons [] (rec [z/down] (z/down zipper)))))
 
 (defn- mutants [zipper paths]
   (->> (for [path paths]
@@ -47,13 +47,12 @@
                  (dep/graph)))))
 
 (defn forms
-  "Return a collection of top-level sexprs as strings found in a given file."
+  "Return a collection of zippers for top-level sexprs found in a given file."
   [file]
-  (->> (z/of-file file)
+  (->> (z/of-file file {:track-position? true})
        (iterate z/right)
        (remove (comp #{'ns} z/sexpr z/down))
-       (take-while boolean)
-       (map z/string)))
+       (take-while boolean)))
 
 (defn- dependants [graph ns]
   (letfn [(rec [sym]
@@ -62,10 +61,11 @@
     (reverse (distinct (rec ns)))))
 
 (defn run-ns
-  [ns forms dep-graph test-fn]
+  [ns zippers dep-graph test-fn]
   (let [cur-ns (symbol (str *ns*))
         deps (dependants dep-graph ns)
-        zipped (zipmap forms (map z/of-string forms))]
+        forms (map z/string zippers)
+        zipped (zipmap forms zippers)]
     (for [candidate forms
           mutant (mutants (zipped candidate)
                           (paths-in-zipper (zipped candidate)))]
