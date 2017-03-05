@@ -73,8 +73,8 @@
         (in-ns ns)
         (doseq [form forms]
           (if (= form candidate)
-            (eval (z/sexpr mutant))
-            (eval (read-string form))))
+            (eval (read-string {:read-cond :allow} (z/string mutant)))
+            (eval (read-string {:read-cond :allow} form))))
         (doseq [dep deps]
           (require dep :reload))
         (if (test-fn)

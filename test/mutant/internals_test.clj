@@ -25,3 +25,21 @@
                        :original (pr-str (first forms))
                        :ns 'mutant.t}}))
              (mi/run-ns 'mutant.t zippers graph (constantly true)))))))
+
+(deftest t-run-ns-cljc
+  (let [form-strs ["(defn cljc-five [] #?(:clj 5))"
+                   "(defn five? [x] (contains? #{5 #?(:clj nil)} x))"]
+        zippers (for [string form-strs]
+                  (z/of-string string {:track-position? true}))
+        graph (clojure.tools.namespace.dependency/graph)]
+    (is (= #{"(defn cljc-five [])"
+             "(defn cljc-five [] #?(:foo 5))"
+             "(defn five? [x] (contains? #{5 #?(:foo nil)} x))"}
+           (->> (mi/run-ns 'mutant.t zippers graph
+                           #(let [five? (resolve 'mutant.t/five?)
+                                  cljc-five (resolve 'mutant.t/cljc-five)]
+                              ;(prn (cljc-five))
+                              (five? (cljc-five))))
+                (keep :survivor)
+                (map :mutant)
+                (set))))))
