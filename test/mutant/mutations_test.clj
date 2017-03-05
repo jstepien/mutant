@@ -25,3 +25,8 @@
                          form)
        '(defn inv [x] (prn x))
        '(defn inv [x] (- x))))
+
+(deftest t-random-keyword
+  (are [input output] (contains? (mutations input) output)
+       :asdf :foo
+       :foo :bar))

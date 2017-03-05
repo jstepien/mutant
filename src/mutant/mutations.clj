@@ -30,6 +30,13 @@
   (if (= 'for (z/sexpr node))
     [(z/replace node 'doseq)]))
 
+(defn- random-keyword [node]
+  (let [sexpr (z/sexpr node)]
+    (if (keyword? sexpr)
+      (case sexpr
+        :foo [(z/replace node :bar)]
+        [(z/replace node :foo)]))))
+
 (defn- rm-args [node]
   (let [sexpr (z/sexpr node)]
     (if (seq? sexpr)
@@ -63,6 +70,7 @@
    eq-noteq
    empty?-seq
    for->doseq
+   random-keyword
    not-boolean])
 
 (defn mutate [zipper]
