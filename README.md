@@ -21,35 +21,21 @@ or your project.clj. Make sure your test suite is green. Then run:
 
     $ lein trampoline mutate
 
-### API
+Learn more in the [user's guide][ug].
 
-The public API consists of two functions and one helper.
+## Documentation
 
-#### `(mutant.core/run source-directory test-directory test-fn)`
+The documentation lives in the `doc` directory.
+It's currently divided into two parts:
 
-Subjects code in `source-directory` to mutation testing. After each
-mutation it reloads relevant namespaces found in `source-directory`
-and `test-directory` and invokes `test-fn`. `test-fn` should throw
-or return a falsey value upon failure.
+  - [the user's guide][ug], and
+  - [the contributor's guide][cg].
 
-Returns a lazy seq of maps of results consisting of following keys:
+Take a look, let me know what you think, and if anything is unclear feel free to
+submit patches!
 
-  - `:total` is the total number of generated mutants so far, and
-  - `:survivors` is a sequence of mutants which didn't cause `test-fn`
-    to report failure. Each mutant is a map with following keys:
-    - `:ns` is the mutant's namespace,
-    - `:original` is the original form, and
-    - `:mutant` is the mutated form.
-
-#### `(mutant.core/pprint results)`
-
-Pretty-prints `results` returned by `mutant.core/run`.
-
-#### `(mutant.helpers.clojure-test/test-fn)`
-
-A simple wrapper around `clojure.test/run-all-tests`, which makes it return
-false in case of any failures or errors. An optional argument is a regular
-expression passed to `clojure.test/run-all-tests`.
+[ug]: https://github.com/jstepien/mutant/blob/master/doc/users-guide.md
+[cg]: https://github.com/jstepien/mutant/blob/master/doc/contributors-guide.md
 
 ## Maturity status
 
@@ -59,10 +45,12 @@ Wildly experimental 🔥
 
   - Markus Schirp's [Mutant](https://github.com/mbj/mutant/) is a mutation
     testing tool for Ruby.
+  - Henry Coles' [Pitest](https://github.com/hcoles/pitest) is a state of the
+    art mutation testing system for the JVM.
 
 ## License
 
-    Copyright 2016 Jan Stępień <jan@stepien.cc>
+    Copyright 2016–now Jan Stępień <jan@stepien.cc>
 
     Licensed under the Apache License, Version 2.0 (the "License"); you may
     not use this file except in compliance with the License. You may obtain
